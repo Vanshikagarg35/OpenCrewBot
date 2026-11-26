@@ -1,6 +1,7 @@
 // Types shared by the server and the browser. Everything here is plain JSON.
 
-export type ApprovalMode = "ask" | "full";
+// controlled = middle level (added for assignment)
+export type ApprovalMode = "ask" | "controlled" | "full";
 
 export interface BotTools {
   /** Tavily search, extract and crawl. */
@@ -32,6 +33,12 @@ export interface Bot {
   approval: ApprovalMode;
   pinned: boolean;
   createdAt: string;
+  // new fields for workforce, optional so old bots dont break
+  skills?: string[];
+  outputFormat?: string;
+  fallbackModel?: string;
+  allowedActions?: string[]; // only used when approval = controlled
+  maxActionsPerRun?: number;
 }
 
 export type BotInput = Omit<Bot, "id" | "createdAt" | "handle" | "connections"> & { handle?: string; connections?: string[] };
@@ -170,4 +177,81 @@ export interface ConnectionOption {
   name: string;
   kind: "composio" | "mcp";
   logo?: string;
+}
+
+// ================= Workforce types (added by me) =================
+
+export type TaskStatus = "pending" | "running" | "waiting_approval" | "done" | "failed" | "cancelled" | "rejected" | "skipped";
+
+export interface TaskAction {
+  type: string; // github_inspect, github_issue, slack_post, gmail_draft, analyze_csv ...
+  params: any;
+}
+
+export interface WfTask {
+  id: string;
+  runId: string;
+  title: string;
+  description: string;
+  agentId: string;
+  agentName?: string;
+  dependsOn: string[];
+  status: TaskStatus;
+  attempts: number;
+  maxAttempts: number;
+  startedAt: string | null;
+  finishedAt: string | null;
+  output: string | null;
+  error: string | null;
+  needsApproval: boolean;
+  action: TaskAction | null;
+  skills: string[];
+  model: string | null;
+  tokensIn: number;
+  tokensOut: number;
+  cost: number;
+  depth: number;
+  parentId: string | null;
+  createdAt: string;
+}
+
+export interface WfRun {
+  id: string;
+  roomId: string | null;
+  instruction: string;
+  status: "planning" | "running" | "done" | "failed" | "cancelled" | "partial";
+  planNote: string;
+  finalOutput: string | null;
+  workflowId: string | null;
+  createdAt: string;
+  updatedAt: string;
+  tasks?: WfTask[];
+}
+
+export interface Approval {
+  id: string;
+  runId: string | null;
+  taskId: string | null;
+  agentId: string | null;
+  actionType: string;
+  preview: string;
+  payload: any;
+  status: "pending" | "approved" | "rejected";
+  createdAt: string;
+  decidedAt: string | null;
+  source?: "task" | "chat";
+  conversationId?: string;
+  toolCallId?: string;
+}
+
+export interface Workflow {
+  id: string;
+  name: string;
+  instruction: string;
+  roomId: string | null;
+  everyMinutes: number;
+  paused: boolean;
+  lastRunAt: string | null;
+  nextRunAt: string | null;
+  createdAt: string;
 }

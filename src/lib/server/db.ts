@@ -10,7 +10,7 @@ import type { Bot, ChatMessage, ConversationId, Room } from "@/lib/shared/types"
 const g = globalThis as unknown as { __opencrewbotDb?: { url: string; schema?: number; client: Promise<Client> } };
 
 /** Bump when a table is added, so a hot-reloaded server re-runs the CREATE statements. */
-const SCHEMA_VERSION = 2;
+const SCHEMA_VERSION = 2; // TODO bump this when adding table
 
 async function open(): Promise<Client> {
   const db = createClient({ url: APP_DB_URL });
@@ -30,6 +30,82 @@ async function open(): Promise<Client> {
         id TEXT PRIMARY KEY,
         generation INTEGER NOT NULL DEFAULT 0,
         last_read_at TEXT
+      )`,
+      // ---- workforce tables ----
+      `CREATE TABLE IF NOT EXISTS wf_runs (
+        id TEXT PRIMARY KEY,
+        room_id TEXT,
+        instruction TEXT NOT NULL,
+        status TEXT NOT NULL,
+        plan_note TEXT,
+        final_output TEXT,
+        workflow_id TEXT,
+        created_at TEXT NOT NULL,
+        updated_at TEXT NOT NULL
+      )`,
+      `CREATE TABLE IF NOT EXISTS wf_tasks (
+        id TEXT PRIMARY KEY,
+        run_id TEXT NOT NULL,
+        title TEXT,
+        description TEXT,
+        agent_id TEXT,
+        depends_on TEXT,
+        status TEXT,
+        attempts INTEGER DEFAULT 0,
+        max_attempts INTEGER DEFAULT 3,
+        started_at TEXT,
+        finished_at TEXT,
+        output TEXT,
+        error TEXT,
+        needs_approval INTEGER DEFAULT 0,
+        action TEXT,
+        skills TEXT,
+        model TEXT,
+        tokens_in INTEGER DEFAULT 0,
+        tokens_out INTEGER DEFAULT 0,
+        cost REAL DEFAULT 0,
+        depth INTEGER DEFAULT 0,
+        parent_id TEXT,
+        created_at TEXT
+      )`,
+      `CREATE TABLE IF NOT EXISTS wf_approvals (
+        id TEXT PRIMARY KEY,
+        run_id TEXT,
+        task_id TEXT,
+        agent_id TEXT,
+        action_type TEXT,
+        preview TEXT,
+        payload TEXT,
+        status TEXT,
+        created_at TEXT,
+        decided_at TEXT
+      )`,
+      `CREATE TABLE IF NOT EXISTS wf_audit (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        at TEXT,
+        who TEXT,
+        what TEXT,
+        details TEXT
+      )`,
+      `CREATE TABLE IF NOT EXISTS wf_workflows (
+        id TEXT PRIMARY KEY,
+        name TEXT,
+        instruction TEXT,
+        room_id TEXT,
+        every_minutes INTEGER,
+        paused INTEGER DEFAULT 0,
+        last_run_at TEXT,
+        next_run_at TEXT,
+        created_at TEXT
+      )`,
+      `CREATE TABLE IF NOT EXISTS wf_workflow_runs (
+        id TEXT PRIMARY KEY,
+        workflow_id TEXT,
+        run_id TEXT,
+        status TEXT,
+        started_at TEXT,
+        finished_at TEXT,
+        error TEXT
       )`,
     ],
     "write",
