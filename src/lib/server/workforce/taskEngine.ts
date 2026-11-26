@@ -3,7 +3,7 @@
 // - retry with backoff, fallback model on retry
 // - timeout per task
 // - approval for external actions (rejected = never executed)
-// - delegation: agent writes "DELEGATE @handle: ..." -> new task (max depth 2)
+// - collaboration: agent writes DELEGATE / ASK / VERIFY @handle or CHALLENGE -> new task (max depth 2)
 // - recovery: on server start, unfinished runs continue (see recoverRuns)
 import { randomUUID } from "node:crypto";
 import { mkdirSync, writeFileSync } from "node:fs";
@@ -265,7 +265,13 @@ async function buildPrompt(run: WfRun, task: WfTask, bot: Bot, byId: any, toolDa
     for (const d of deps) p += `\n## ${d.title} (${d.status})\n${(d.output || d.error || "").slice(0, 4000)}\n`;
   }
   if (toolData) p += `\n=== TOOL DATA (REAL) ===\n${toolData}\n=== END TOOL DATA ===\n`;
-  p += `\nRules: do only your part. If you really need a teammate to do something extra write one line: DELEGATE @handle: what you need. If you think a teammate's result is wrong write CHALLENGE: reason. Don't do external actions yourself, they are done by the system after approval.`;
+  p += `\nTeam handles you can work with: ${(await listBots()).filter((b) => b.id != bot.id).map((b) => "@" + b.handle + " (" + b.title + ")").join(", ")}\n`;
+  p += `\nRules:
+- do only your part of the work
+- if you need a teammate, write ONE line at the end: DELEGATE @handle: what you need / ASK @handle: your question / VERIFY @handle: what to check
+- if a teammate's result above looks wrong or has no evidence, write: CHALLENGE: reason
+- only do this if it is really needed, dont ask the same person twice
+- dont do external actions (email, slack, github issue) yourself. the system does them after human approval.`;
   return { prompt: p, skills };
 }
 
@@ -319,7 +325,7 @@ async function runTask(run: WfRun, task: WfTask, byId: any) {
         const finalText = toolData && !text.includes("TOOL DATA") && isMock() ? text : text;
         await updateTask(task.id, { status: "done", output: finalText, finishedAt: now(), error: null, tokensIn: tin, tokensOut: tout, cost: cost || 0 });
         await audit(bot.name, "task_done", { task: task.id, attempts });
-        await handleDelegation(run, task, bot, text);
+        await handleCollaboration(run, task, bot, text);
         return;
       } catch (e: any) {
         lastErr = e.message || String(e);
@@ -395,28 +401,114 @@ async function runExternalTask(run: WfRun, task: WfTask, bot: Bot, byId: any, co
   }
 }
 
-// agents can ask teammates for more work. limited so it doesnt loop forever
-async function handleDelegation(run: WfRun, task: WfTask, bot: Bot, text: string) {
-  const matches = [...text.matchAll(/^DELEGATE @([a-z0-9_-]+):\s*(.+)$/gim)];
-  if (!matches.length) return;
-  if (task.depth >= MAX_DELEGATION_DEPTH) {
-    await audit(bot.name, "delegation_blocked", { reason: "max depth", task: task.id });
-    return;
-  }
+// Agent to agent collaboration. An agent can write these lines in its output:
+//   DELEGATE @handle: do this extra work
+//   ASK @handle: question i need answered
+//   VERIFY @handle: please check this
+//   CHALLENGE: reason why a teammate's result looks wrong
+// each one becomes a new task so the work is tracked, not just chat.
+//
+// loop prevention (assignment says prevent endless delegation):
+//   1. depth limit (MAX_DELEGATION_DEPTH = 2)
+//   2. max 20 tasks per run
+//   3. max 2 requests per task output
+//   4. same from->to->kind pair is allowed only once per run (stops A asks B, B asks A, A asks B...)
+const KINDS: any = {
+  DELEGATE: { label: "Delegated by", verb: "delegated", prefix: "d" },
+  ASK: { label: "Question from", verb: "asked", prefix: "q" },
+  VERIFY: { label: "Verification asked by", verb: "asked_verification", prefix: "v" },
+};
+
+function isFinalTask(t: { title: string }) {
+  return t.title.toLowerCase().startsWith("consolidate");
+}
+
+async function handleCollaboration(run: WfRun, task: WfTask, bot: Bot, text: string) {
+  // the consolidation task is the last step, it cannot ask anyone.
+  // (if it does we get a deadlock: new task waits for consolidate, consolidate waits for new task)
+  if (isFinalTask(task)) return;
+  const conv = await conversationFor(run);
   const all = await getTasks(run.id);
   const bots = await listBots();
-  for (const m of matches.slice(0, 2)) {
-    if (all.length >= MAX_TASKS_PER_RUN) break;
-    const target = bots.find((b) => b.handle == m[1].toLowerCase());
-    if (!target || target.id == bot.id) continue;
-    const id = run.id + "-d" + randomUUID().slice(0, 4);
-    await insertTask(run.id, { id, title: "Delegated by " + bot.name + ": " + m[2].slice(0, 60), description: m[2], agentId: target.id, dependsOn: [task.id], depth: task.depth + 1, parentId: task.id });
-    all.push({ id } as any);
-    // final task should wait for delegated task too
-    const final = all.find((t: any) => t.title && t.title.toLowerCase().startsWith("consolidate") && t.status == "pending");
-    if (final) await updateTask(final.id, { dependsOn: [...final.dependsOn, id] });
-    await audit(bot.name, "delegated", { to: target.name, task: id });
+
+  // pairs that already happened in this run, so we dont go round and round
+  const seen = new Set<string>();
+  for (const t of all) {
+    if (t.parentId) seen.add(t.title.split(":")[0] + "->" + t.agentId);
   }
+
+  const reqs = [...text.matchAll(/^(DELEGATE|ASK|VERIFY) @([a-z0-9_-]+):\s*(.+)$/gim)].slice(0, 2);
+  for (const m of reqs) {
+    const kind = KINDS[m[1].toUpperCase()];
+    const target = bots.find((b) => b.handle == m[2].toLowerCase());
+    if (!target || target.id == bot.id) continue;
+    if (task.depth >= MAX_DELEGATION_DEPTH) {
+      await audit(bot.name, "collaboration_blocked", { reason: "max depth " + MAX_DELEGATION_DEPTH, task: task.id });
+      await notice(conv, `🔁 ${bot.name} wanted to involve @${target.handle} but the delegation depth limit was reached, so it was skipped.`);
+      continue;
+    }
+    if (all.length >= MAX_TASKS_PER_RUN) {
+      await audit(bot.name, "collaboration_blocked", { reason: "max tasks", task: task.id });
+      break;
+    }
+    const pair = kind.label + " " + bot.name + "->" + target.id;
+    if (seen.has(kind.label + " " + bot.name + "->" + target.id)) {
+      await audit(bot.name, "collaboration_blocked", { reason: "same request already made in this run", to: target.name });
+      continue;
+    }
+    seen.add(pair);
+
+    const id = run.id + "-" + kind.prefix + randomUUID().slice(0, 4);
+    await insertTask(run.id, {
+      id,
+      title: `${kind.label} ${bot.name}: ${m[3].slice(0, 60)}`,
+      description: m[3] + (m[1].toUpperCase() == "ASK" ? "\n\nAnswer this question directly and shortly." : ""),
+      agentId: target.id,
+      dependsOn: [task.id],
+      depth: task.depth + 1,
+      parentId: task.id,
+    });
+    all.push({ id, title: `${kind.label} ${bot.name}`, agentId: target.id, parentId: task.id, dependsOn: [task.id] } as any);
+    await reopenFinal(run.id, all, id);
+    await audit(bot.name, kind.verb, { to: target.name, task: id });
+    await notice(conv, `🤝 **${bot.name} → @${target.handle}** (${m[1].toLowerCase()}): ${m[3].slice(0, 200)}`);
+  }
+
+  // CHALLENGE has no @handle, it goes to a reviewer agent
+  const ch = text.match(/^CHALLENGE:\s*(.+)$/im);
+  if (ch && task.depth < MAX_DELEGATION_DEPTH && all.length < MAX_TASKS_PER_RUN) {
+    const reviewer = findAgent(bots, "review", bot.id);
+    if (reviewer && !seen.has("Challenge->" + reviewer.id)) {
+      const id = run.id + "-c" + randomUUID().slice(0, 4);
+      await insertTask(run.id, {
+        id,
+        title: `Challenge from ${bot.name}: ${ch[1].slice(0, 50)}`,
+        description: `${bot.name} challenged an earlier result. Reason: ${ch[1]}\n\nRe-check the result above, say if the challenge is correct or not, and give the corrected version.`,
+        agentId: reviewer.id,
+        dependsOn: [task.id],
+        depth: task.depth + 1,
+        parentId: task.id,
+      });
+      all.push({ id } as any);
+      await reopenFinal(run.id, all, id);
+      await audit(bot.name, "challenged", { reviewer: reviewer.name, task: id, reason: ch[1].slice(0, 200) });
+      await notice(conv, `⚠️ **${bot.name} challenged a result:** ${ch[1].slice(0, 200)}\n@${reviewer.handle} will verify it.`);
+      if (run.roomId) addMemory("room:" + run.roomId, `${bot.name} challenged a result: ${ch[1].slice(0, 120)}`, bot.name, "disagreement in the room, kept for context");
+    }
+  }
+}
+
+// the consolidation task must wait for newly added tasks also
+async function reopenFinal(runId: string, all: any[], newId: string) {
+  const final = all.find((t: any) => t.title && isFinalTask(t));
+  if (!final) return;
+  const tasks = await getTasks(runId);
+  const fresh = tasks.find((t) => t.id == final.id);
+  if (!fresh) return;
+  // safety: never make the final task wait for something that is waiting for the final task
+  const added = tasks.find((t) => t.id == newId);
+  if (added && added.dependsOn.includes(final.id)) return;
+  await updateTask(final.id, { dependsOn: [...fresh.dependsOn, newId], status: fresh.status == "done" ? "pending" : fresh.status, output: fresh.status == "done" ? null : fresh.output });
 }
 
 async function finishRun(runId: string) {

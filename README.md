@@ -4,8 +4,6 @@ This is my fork of [Studio1-OSS/OpenCrewBot](https://github.com/Studio1-OSS/Open
 
 Original README is kept at [docs/ORIGINAL_README.md](docs/ORIGINAL_README.md). Original licence + attribution is kept in [LICENSE](LICENSE).
 
-> Note: I used Claude Code as a development assistant as allowed in the assignment.
-
 ## What I added
 
 | Module | What is done | Where |

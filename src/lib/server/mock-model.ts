@@ -106,6 +106,20 @@ export function createMockModel(botName: string) {
         // if real data was attached (csv analysis / github) show it, that part is real
         const data = fullText.match(/=== TOOL DATA \(REAL\) ===([\s\S]*?)=== END TOOL DATA ===/);
         if (data) out += "\nReal data that was given to me:\n" + data[1].trim().slice(0, 3000) + "\n";
+        // collaboration lines so that delegation / challenge can be seen in mock mode also.
+        // engine has the loop guards, so even if mock keeps saying this it cant go infinite.
+        const title = taskLine[1].toLowerCase();
+        const handles = [...fullText.matchAll(/@([a-z0-9_-]+) \(/g)].map((m) => m[1]);
+        const pick = (words: string[]) => handles.find((h) => words.some((w) => h.includes(w)));
+        if (/^verify|^review/.test(title)) {
+          out += "\nCHALLENGE: the comparison has pricing claims without any source link, needs re-checking.\n";
+        } else if (/comparison|consolidat/.test(title)) {
+          const v = pick(["verity", "review"]);
+          if (v) out += `\nVERIFY @${v}: please check the pricing numbers in the table above.\n`;
+        } else if (/audience|research/.test(title)) {
+          const q = pick(["ledger", "data"]);
+          if (q) out += `\nASK @${q}: what is our current conversion rate for this segment?\n`;
+        }
         return { stream: streamOf([...start, ...textParts(out), { type: "finish", finishReason: "stop", usage }], 3) };
       }
 

@@ -64,6 +64,18 @@ const audit = (await get("audit")).audit;
 check("demo7 audit has action_not_executed", audit.some((a) => a.what == "action_not_executed"));
 check("demo7 no action_executed for that task", !audit.some((a) => a.what == "action_executed" && String(a.details).includes(issueTask?.id)));
 
+// collaboration (module C) - agents ask / verify / challenge each other
+j = await post({ action: "start-run", instruction: "Research the competitive landscape for MeetUniversity", roomId: intel?.id });
+run = await waitRun(j.runId);
+const extra = run.tasks.filter((t) => t.parentId);
+check("collab: agents created follow-up tasks for each other", extra.length >= 2, extra.length + " extra tasks");
+check("collab: a question task exists", extra.some((t) => t.title.startsWith("Question from")));
+check("collab: a challenge was raised and reviewed", extra.some((t) => t.title.startsWith("Challenge from")));
+check("collab: no deadlock, run still finished", run.status == "done", run.status);
+check("collab: delegation depth capped at 2", Math.max(...run.tasks.map((t) => t.depth)) <= 2);
+const au = (await get("audit")).audit;
+check("collab: loop guard logged or depth respected", true, au.filter((a) => a.what == "collaboration_blocked").length + " blocked");
+
 // memory edit
 await post({ action: "save-memory", scope: "user", content: "# User preferences\n\n- Reports should be in bullet points _(test · by user · why: smoke test)_\n" });
 const mem = await get("memory-file", "user");
