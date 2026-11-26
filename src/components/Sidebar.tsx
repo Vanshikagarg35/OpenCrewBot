@@ -190,7 +190,11 @@ function SidebarFooter() {
         <span className="shrink-0 text-[10px] font-semibold tracking-[0.08em] text-faint uppercase">Powered by</span>
         <NebiusLogo height={14} className="shrink-0" />
       </a>
-      <IconButton label="Connections" onClick={() => setPanel({ kind: "connections" })} className="ml-auto">
+      {/* link to new workforce dashboard */}
+      <a href="/workforce" title="AI Workforce" className="ml-auto flex h-9 items-center rounded-lg px-2 text-[12px] font-medium text-mute ring-1 ring-line hover:bg-hover hover:text-ink">
+        ⚡ Workforce
+      </a>
+      <IconButton label="Connections" onClick={() => setPanel({ kind: "connections" })}>
         <Plug size={18} />
       </IconButton>
       <IconButton label={settingsHint} onClick={() => setPanel({ kind: "settings" })} className="relative">
