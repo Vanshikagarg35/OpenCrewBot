@@ -34,6 +34,12 @@ const CAPS: any = {
 
 export function findAgent(bots: Bot[], cap: string, notId?: string): Bot {
   const words = CAPS[cap] || [cap];
+  // first check only title + name (skills like "lead-generation" were matching "lead" for chief, bug)
+  for (const b of bots) {
+    if (b.id == notId) continue;
+    const hay = (b.title + " " + b.name).toLowerCase();
+    if (words.some((w: string) => hay.includes(w))) return b;
+  }
   for (const b of bots) {
     if (b.id == notId) continue;
     const hay = (b.title + " " + b.description + " " + b.name + " " + (b.skills || []).join(" ")).toLowerCase();
@@ -75,7 +81,7 @@ export function rulePlan(instruction: string, bots: Bot[], startAt = 1, addFinal
     const a = add("Analyse sales spreadsheet", "Look at the real numbers from the spreadsheet analysis. Find bottlenecks and best/worst segments.", "analysis", [], { type: "analyze_csv", params: { file: "./samples/sales_sample.csv" } });
     add("Business recommendations", "Give 5 recommendations based on the analysis, each tied to a number.", "marketing", [a]);
   }
-  if (/github|repo|repository|code review|development plan/.test(t)) {
+  if (/github|\brepo\b|repository|code review|development plan/.test(t)) { // \b because "report" was matching repo lol
     const repo = repoFrom(instruction);
     const a = add("Inspect GitHub repository " + repo, "Inspect the repo data given below. List technical issues.", "code", [], { type: "github_inspect", params: { repo } });
     const b = add("Prioritised improvements + development plan", "From the issues, make prioritised list (High/Med/Low), proposed changes and a 2-4 week dev plan.", "code", [a]);

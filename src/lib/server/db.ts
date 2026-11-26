@@ -10,7 +10,7 @@ import type { Bot, ChatMessage, ConversationId, Room } from "@/lib/shared/types"
 const g = globalThis as unknown as { __opencrewbotDb?: { url: string; schema?: number; client: Promise<Client> } };
 
 /** Bump when a table is added, so a hot-reloaded server re-runs the CREATE statements. */
-const SCHEMA_VERSION = 2; // TODO bump this when adding table
+const SCHEMA_VERSION = 3; // bumped for workforce tables (hot reload wasnt creating them)
 
 async function open(): Promise<Client> {
   const db = createClient({ url: APP_DB_URL });
