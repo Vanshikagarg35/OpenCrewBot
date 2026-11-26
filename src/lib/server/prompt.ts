@@ -1,5 +1,6 @@
 import type { Bot } from "@/lib/shared/types";
 import { memoryForPrompt } from "./memory-files";
+import { sharedMemoryForPrompt } from "./workforce/sharedMemory";
 
 export function systemPrompt(bot: Bot, capabilities: string[], toolInstructions: string[]): string {
   const today = new Date().toLocaleDateString("en-US", { weekday: "long", year: "numeric", month: "long", day: "numeric" });
@@ -38,6 +39,13 @@ export function systemPrompt(bot: Bot, capabilities: string[], toolInstructions:
       ].join("\n"),
     );
   }
+
+  // shared memory (user prefs, project, decisions). always added
+  // if user edits USER.md the next reply uses the new version since this runs every call
+  sections.push(
+    "## Shared team memory\nThese files are shared by all agents. User preferences here are IMPORTANT, follow them. If a preference was corrected, the newest line wins.\n\n" +
+      sharedMemoryForPrompt(null),
+  );
 
   sections.push(...toolInstructions);
   return sections.join("\n\n");

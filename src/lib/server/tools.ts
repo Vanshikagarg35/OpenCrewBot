@@ -11,6 +11,7 @@ import { appendMemory, editMemory } from "./memory-files";
 import { publish } from "./bus";
 import { keys } from "./config";
 import { mcpServerNames } from "./connectors";
+import { addMemory } from "./workforce/sharedMemory";
 
 export const CODE_MODE_TOOL = "execute_typescript";
 
@@ -23,9 +24,10 @@ function memoryTools(botId: string): ToolsInput {
       inputSchema: z.object({
         note: z.string().min(1).describe("The fact, as one short sentence."),
         section: z.string().optional().describe("Optional heading to file it under, e.g. 'About the person' or 'Projects'."),
+        why: z.string().optional().describe("Why you are remembering this, short. e.g. 'user said so'"),
       }),
-      execute: async ({ note, section }) => {
-        appendMemory(botId, note, section);
+      execute: async ({ note, section, why }) => {
+        appendMemory(botId, note, section, why);
         publish({ type: "memory-changed", botId });
         return { saved: true };
       },
@@ -39,6 +41,26 @@ function memoryTools(botId: string): ToolsInput {
         const result = editMemory(botId, find, replace);
         if (result.ok) publish({ type: "memory-changed", botId });
         return result;
+      },
+    }),
+  };
+}
+
+// shared memory tool - writes to USER.md / PROJECT.md / DECISIONS.md
+function sharedMemoryTool(botName: string): ToolsInput {
+  return {
+    team_memory_add: createTool({
+      id: "team_memory_add",
+      description:
+        "Save something to SHARED team memory that every agent can see. scope: user (user preferences), project (facts about the project/business), decisions (important decisions).",
+      inputSchema: z.object({
+        scope: z.enum(["user", "project", "decisions"]),
+        note: z.string().min(1),
+        why: z.string().describe("short reason why this is remembered"),
+      }),
+      execute: async ({ scope, note, why }) => {
+        addMemory(scope, note, botName, why);
+        return { saved: true, scope };
       },
     }),
   };
@@ -74,6 +96,7 @@ export function buildTools(bot: Bot): BotToolset {
   }
   if (bot.tools.memory) {
     Object.assign(tools, memoryTools(bot.id));
+    Object.assign(tools, sharedMemoryTool(bot.name));
   }
   if (bot.tools.codeMode) {
     // The program runs in a QuickJS (WebAssembly) isolate with no filesystem or
@@ -165,6 +188,8 @@ export function toolLabel(name: string, args: unknown): { label: string; detail?
       return { label: "Saved to memory", detail: String(a.note ?? "") };
     case "memory_edit":
       return { label: "Updated memory" };
+    case "team_memory_add":
+      return { label: "Saved to team memory", detail: String(a.scope ?? "") + ": " + String(a.note ?? "") };
     case CODE_MODE_TOOL:
       return { label: "Ran code" };
     case "ask_user":

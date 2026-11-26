@@ -62,9 +62,10 @@ export function memoryForPrompt(botId: string): { text: string; truncated: boole
   return { text: text.trim(), truncated: text.length < full.trimEnd().length };
 }
 
-export function appendMemory(botId: string, note: string, section?: string): string {
+export function appendMemory(botId: string, note: string, section?: string, why?: string): string {
   const today = new Date().toISOString().slice(0, 10);
-  const line = `- ${note.trim().replace(/\n+/g, " ")} _(${today})_`;
+  // added "why" for provenance
+  const line = `- ${note.trim().replace(/\n+/g, " ")} _(${today}${why ? " · why: " + why : ""})_`;
   let content = readMemory(botId).trimEnd();
   if (section) {
     const heading = `## ${section.trim()}`;
