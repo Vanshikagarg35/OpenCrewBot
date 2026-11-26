@@ -92,6 +92,24 @@ async function createBrowser(bot: Bot): Promise<MastraBrowser | undefined> {
   }) as unknown as MastraBrowser;
 }
 
+// added multi provider. "openai:xyz" -> openai, "ollama:xyz" -> local ollama, else nebius like before
+function resolveModel(model: string): any {
+  if (model.startsWith("openai:")) return `openai/${model.slice(7)}`;
+  if (model.startsWith("ollama:")) {
+    return {
+      providerId: "ollama",
+      modelId: model.slice(7),
+      url: process.env.OLLAMA_BASE_URL || "http://localhost:11434/v1",
+      apiKey: "ollama",
+    };
+  }
+  // if no nebius key but openai key is there use openai default (so app still works)
+  if (!process.env.NEBIUS_API_KEY && process.env.OPENAI_API_KEY) {
+    return `openai/${process.env.OPENAI_DEFAULT_MODEL || "gpt-4o-mini"}`;
+  }
+  return `nebius/${model}`;
+}
+
 async function buildRuntime(bot: Bot): Promise<BotRuntime> {
   const holder = { bot };
   const memory = new Memory({ storage: state.storage, options: { lastMessages: 40 } });
@@ -102,7 +120,7 @@ async function buildRuntime(bot: Bot): Promise<BotRuntime> {
     id: `bot-${bot.id}`,
     name: bot.name,
     instructions: () => systemPrompt(holder.bot, capabilities, builtIn.instructions),
-    model: isMock() ? createMockModel(bot.name) : () => `nebius/${holder.bot.model}`,
+    model: isMock() ? createMockModel(bot.name) : () => resolveModel(holder.bot.model),
     tools: { ...connectors.tools, ...builtIn.tools },
     memory,
   });
@@ -171,6 +189,12 @@ async function sessionFor(bot: Bot, conversationId: ConversationId): Promise<Ses
   // Connected apps and MCP servers act on real accounts: ask first unless the bot has full access.
   await session.permissions.setForCategory({ category: "mcp", policy: bot.approval === "full" ? "allow" : "ask" });
   await session.permissions.setForCategory({ category: "execute", policy: bot.approval === "full" ? "allow" : "ask" });
+  // controlled access: tools in allowedActions are pre approved, rest still ask
+  if (bot.approval === "controlled" && bot.allowedActions) {
+    for (const t of bot.allowedActions) {
+      await session.permissions.setForTool({ toolName: t, policy: "allow" });
+    }
+  }
   state.sessions.set(k, session);
   return session;
 }
@@ -363,6 +387,7 @@ export interface TurnRequest {
   /** What the bot receives: the person's words, or a room's catch-up text. */
   content: string;
   route?: RouteNote;
+  modelOverride?: string; // used by task engine for routing / fallback
 }
 
 /** Queue one turn for one bot in one conversation and resolve with its reply,
@@ -381,8 +406,9 @@ export function runTurn(request: TurnRequest): Promise<ChatMessage | null> {
   return next;
 }
 
-async function executeTurn({ bot, conversationId, content, route }: TurnRequest): Promise<ChatMessage> {
-  const latest = (await getBot(bot.id)) ?? bot;
+async function executeTurn({ bot, conversationId, content, route, modelOverride }: TurnRequest): Promise<ChatMessage> {
+  let latest = (await getBot(bot.id)) ?? bot;
+  if (modelOverride) latest = { ...latest, model: modelOverride };
   const k = key(conversationId, latest.id);
   const folder = new TurnFolder(conversationId, latest, route);
   setRunning(conversationId, latest.id, true);

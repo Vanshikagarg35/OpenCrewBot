@@ -27,7 +27,11 @@ export const keys = {
 };
 
 /** Without a Nebius key, bots run on a scripted local model so the UI still works. */
-export const isMock = () => !keys.nebius();
+// changed: now openai or ollama also counts as real model. OPENCREWBOT_MOCK_MODE=1 forces mock
+export const isMock = () => {
+  if (process.env.OPENCREWBOT_MOCK_MODE == "1") return true;
+  return !keys.nebius() && !process.env.OPENAI_API_KEY && !process.env.OLLAMA_BASE_URL;
+};
 
 export function appStatus(): AppStatus {
   return {
