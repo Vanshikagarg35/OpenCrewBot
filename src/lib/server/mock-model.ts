@@ -96,6 +96,19 @@ export function createMockModel(botName: string) {
       const search = said.match(/(?:search|look up|find)\s+(?:for\s+)?(.+)/i);
       if (search && tools.has("web_search")) return toolCall("web_search", { query: search[1], maxResults: 3 });
 
+      // workforce tasks in mock mode. task engine sends "TASK: title" in the prompt
+      const fullText = lastUserText(prompt);
+      const taskLine = fullText.match(/TASK: (.+)/);
+      if (taskLine) {
+        let out = `**[MOCK OUTPUT]** ${botName} finished: *${taskLine[1]}*\n\n`;
+        out += "- This is placeholder text from the mock model, not real research.\n";
+        out += "- Add NEBIUS_API_KEY / OPENAI_API_KEY / OLLAMA_BASE_URL in .env to get real output.\n";
+        // if real data was attached (csv analysis / github) show it, that part is real
+        const data = fullText.match(/=== TOOL DATA \(REAL\) ===([\s\S]*?)=== END TOOL DATA ===/);
+        if (data) out += "\nReal data that was given to me:\n" + data[1].trim().slice(0, 3000) + "\n";
+        return { stream: streamOf([...start, ...textParts(out), { type: "finish", finishReason: "stop", usage }], 3) };
+      }
+
       const reply =
         `Hi, I'm **${botName}**, running on the *mock model* because no \`NEBIUS_API_KEY\` is set yet.\n\n` +
         `You said: "${said.slice(0, 200)}"\n\n` +
