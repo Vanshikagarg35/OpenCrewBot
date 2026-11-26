@@ -2,8 +2,23 @@
 import { randomUUID } from "node:crypto";
 import { db } from "../db";
 import type { Workflow } from "@/lib/shared/types";
-import { startRun, getRun } from "./taskEngine";
+import { startRun, getRun, notice, conversationFor } from "./taskEngine";
 import { audit } from "./approvals";
+
+async function reportFailure(workflowId: string, run: any, err: string | null) {
+  try {
+    const r = await (await db()).execute({ sql: "SELECT name FROM wf_workflows WHERE id = ?", args: [workflowId] });
+    const name = r.rows[0] ? String(r.rows[0].name) : workflowId;
+    const failed = (run.tasks || []).filter((t: any) => ["failed", "skipped", "rejected"].includes(t.status));
+    let msg = `⏰ Scheduled workflow **${name}** finished as **${run.status}** (run \`${run.id}\`).\n`;
+    if (err) msg += `\nFirst error: ${err}\n`;
+    if (failed.length) msg += `\nTasks not completed: ${failed.map((t: any) => t.title + " (" + t.status + ")").join(", ")}\n`;
+    msg += `\nYou can retry the failed task from Workforce → Runs → ${run.id}.`;
+    await notice(await conversationFor(run), msg);
+  } catch (e) {
+    console.log("[scheduler] could not report failure", e);
+  }
+}
 
 const g = globalThis as any;
 
@@ -87,10 +102,16 @@ async function syncHistory() {
     if (!run) continue;
     if (["done", "failed", "partial", "cancelled"].includes(run.status)) {
       const failedTask = (run.tasks || []).find((t) => t.status == "failed");
+      const err = failedTask ? failedTask.title + ": " + failedTask.error : null;
       await (await db()).execute({
         sql: "UPDATE wf_workflow_runs SET status = ?, finished_at = ?, error = ? WHERE id = ?",
-        args: [run.status, run.updatedAt, failedTask ? failedTask.title + ": " + failedTask.error : null, String(row.id)],
+        args: [run.status, run.updatedAt, err, String(row.id)],
       });
+      // failure reporting - tell the user, dont just leave it in the table
+      if (run.status != "done") {
+        await audit("scheduler", "workflow_run_" + run.status, { workflow: String(row.workflow_id), runId: run.id, error: err });
+        await reportFailure(String(row.workflow_id), run, err);
+      }
     }
   }
 }

@@ -17,7 +17,7 @@ async function post(data: any) {
   return j;
 }
 
-const TABS = ["Runs", "Approvals", "Agents", "Memory", "Skills", "Workflows", "Integrations & Models", "Audit log"];
+const TABS = ["Runs", "Approvals", "Agents", "Memory", "Skills & Tools", "Workflows", "Integrations & Models", "Audit log"];
 
 const statusColor: any = {
   done: "bg-green-600",
@@ -78,7 +78,7 @@ export default function WorkforcePage() {
         {tab == "Approvals" && <ApprovalsTab />}
         {tab == "Agents" && <AgentsTab />}
         {tab == "Memory" && <MemoryTab />}
-        {tab == "Skills" && <SkillsTab />}
+        {tab == "Skills & Tools" && <SkillsTab />}
         {tab == "Workflows" && <WorkflowsTab />}
         {tab == "Integrations & Models" && <IntegrationsTab />}
         {tab == "Audit log" && <AuditTab />}
@@ -434,21 +434,56 @@ function MemoryTab() {
 
 // ---------------- Skills ----------------
 function SkillsTab() {
-  const [skills, setSkills] = useState<any[]>([]);
+  const [data, setData] = useState<any>({ skills: [], tools: [], actions: [], mcpServers: [] });
   const [open, setOpen] = useState<string | null>(null);
   useEffect(() => {
-    get("skills").then((j) => setSkills(j.skills || []));
+    get("skills").then(setData);
   }, []);
   return (
     <div>
-      <p className="mb-3 text-sm text-mute">Skills are markdown files in the <code>/skills</code> folder. Agents load them automatically by matching keywords with the task. Add a new .md file to add a skill.</p>
-      {skills.map((s) => (
+      <h2 className="mb-1 font-semibold">Skills ({data.skills.length})</h2>
+      <p className="mb-3 text-sm text-mute">Skills are markdown files in the <code>/skills</code> folder. Agents load them automatically by matching keywords with the task. Add a new .md file to add a skill, no code change and no restart needed.</p>
+      {data.skills.map((s: any) => (
         <div key={s.id} className="mb-2 rounded-lg bg-raised p-3">
           <button onClick={() => setOpen(open == s.id ? null : s.id)} className="font-medium">{s.name}</button>
           <span className="ml-2 text-xs text-mute">{s.kind} · {s.keywords.join(", ")}</span>
           {open == s.id && <div className="mt-2"><Md text={s.body} /></div>}
         </div>
       ))}
+
+      <h2 className="mb-1 mt-6 font-semibold">Agent tools</h2>
+      <p className="mb-2 text-sm text-mute">Turn these on/off per agent in the agent settings. Permission level decides which ones need approval.</p>
+      <table className="mb-6 w-full text-sm">
+        <thead><tr className="text-left text-mute"><th className="py-1">Tool</th><th>Type</th><th>Needs</th><th>Approval</th><th>Enabled for</th></tr></thead>
+        <tbody>
+          {data.tools.map((t: any) => (
+            <tr key={t.id} className="border-t border-line align-top">
+              <td className="py-1">{t.name}</td>
+              <td className="text-xs">{t.category}</td>
+              <td className="font-mono text-xs">{t.needs}</td>
+              <td className="text-xs">{t.approval}</td>
+              <td className="text-xs">{t.usedBy?.join(", ") || "-"}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      <h2 className="mb-1 font-semibold">Workforce actions</h2>
+      <p className="mb-2 text-sm text-mute">These are run by the execution engine, not by the agent. External ones go through the Approval centre.</p>
+      <table className="w-full text-sm">
+        <thead><tr className="text-left text-mute"><th className="py-1">Action</th><th>External?</th><th>Needs</th><th>Status</th></tr></thead>
+        <tbody>
+          {data.actions.map((a: any) => (
+            <tr key={a.id} className="border-t border-line">
+              <td className="py-1 font-mono text-xs">{a.id}</td>
+              <td className="text-xs">{a.external ? "yes - needs approval" : "no (read only)"}</td>
+              <td className="font-mono text-xs">{a.needs}</td>
+              <td><span className={"rounded px-1.5 text-xs " + (a.live ? "bg-green-700" : "bg-yellow-700")}>{a.live ? "LIVE" : "MOCK"}</span></td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <p className="mt-3 text-xs text-mute">MCP servers connected: {data.mcpServers?.length ? data.mcpServers.join(", ") : "none yet (add from Connections panel in the main app)"}</p>
     </div>
   );
 }

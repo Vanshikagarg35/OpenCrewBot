@@ -5,13 +5,15 @@ import { InputError, createBot } from "@/lib/server/service";
 import { listRuns, getRun, startRun, cancelRun, retryTask, cancelTask, addInstruction } from "@/lib/server/workforce/taskEngine";
 import { listApprovals, decideApproval, listAudit } from "@/lib/server/workforce/approvals";
 import { respondToApproval } from "@/lib/server/runtime";
-import { listSkills, saveSkill } from "@/lib/server/workforce/skills";
+import { listSkills, saveSkill, TOOL_CATALOG, ACTION_CATALOG } from "@/lib/server/workforce/skills";
 import { listMemoryFiles, readScope, writeScope } from "@/lib/server/workforce/sharedMemory";
 import { listWorkflows, createWorkflow, setPaused, runWorkflowNow, deleteWorkflow } from "@/lib/server/workforce/scheduler";
 import { integrationStatus } from "@/lib/server/workforce/integrations";
 import { generateAgent } from "@/lib/server/workforce/agentFactory";
 import { getProviders, modelForKind, fallbackModel } from "@/lib/server/workforce/llm";
 import { isMock } from "@/lib/server/config";
+import { listBots } from "@/lib/server/db";
+import { mcpServerNames } from "@/lib/server/connectors";
 import { publish } from "@/lib/server/bus";
 
 export async function GET(request: Request) {
@@ -28,8 +30,15 @@ export async function GET(request: Request) {
         return { approvals: await listApprovals() };
       case "audit":
         return { audit: await listAudit() };
-      case "skills":
-        return { skills: listSkills() };
+      case "skills": {
+        const bots = await listBots();
+        return {
+          skills: listSkills(),
+          tools: TOOL_CATALOG.map((t) => ({ ...t, usedBy: bots.filter((b) => (b.tools as any)[t.id]).map((b) => b.name) })),
+          actions: ACTION_CATALOG,
+          mcpServers: [...mcpServerNames.values()],
+        };
+      }
       case "memory":
         return { files: await listMemoryFiles() };
       case "memory-file":

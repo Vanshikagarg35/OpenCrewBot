@@ -66,3 +66,22 @@ export function saveSkill(id: string, content: string) {
   writeFileSync(join(SKILLS_DIR, safe + ".md"), content);
   return safe;
 }
+
+// Tool catalog for the "Skills & Tools" manager page. Which tools exist, what they
+// need, and which permission level they fall under.
+export const TOOL_CATALOG = [
+  { id: "webSearch", name: "Web search", needs: "TAVILY_API_KEY", category: "read", approval: "no approval (read only)" },
+  { id: "memory", name: "Memory (own + team)", needs: "-", category: "read/write", approval: "no approval (local files)" },
+  { id: "codeMode", name: "Code mode (run JS)", needs: "-", category: "execute", approval: "Ask / Controlled levels ask first" },
+  { id: "browser", name: "Cloud browser", needs: "BROWSERBASE_API_KEY", category: "execute", approval: "Ask / Controlled levels ask first" },
+  { id: "askUser", name: "Ask the user", needs: "-", category: "read", approval: "no approval" },
+];
+
+// workforce level actions (done by the engine, not by the agent itself)
+export const ACTION_CATALOG = [
+  { id: "analyze_csv", name: "Analyse spreadsheet", external: false, needs: "a .csv file", live: true },
+  { id: "github_inspect", name: "Inspect GitHub repo", external: false, needs: "GITHUB_TOKEN optional", live: true },
+  { id: "github_issue", name: "Create GitHub issue", external: true, needs: "GITHUB_TOKEN", live: Boolean(process.env.GITHUB_TOKEN) },
+  { id: "slack_post", name: "Post to Slack", external: true, needs: "SLACK_WEBHOOK_URL", live: Boolean(process.env.SLACK_WEBHOOK_URL) },
+  { id: "gmail_send", name: "Send email", external: true, needs: "not implemented", live: false },
+];

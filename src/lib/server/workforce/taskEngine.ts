@@ -140,13 +140,13 @@ async function insertTask(runId: string, t: any) {
 }
 
 // post a message in the room so user can see whats happening
-async function notice(conversationId: string, text: string) {
+export async function notice(conversationId: string, text: string) {
   const m: ChatMessage = { id: randomUUID(), conversationId, role: "notice", createdAt: now(), status: "done", parts: [{ kind: "text", text }] };
   await saveMessage(m);
   publish({ type: "message", message: m });
 }
 
-async function conversationFor(run: WfRun) {
+export async function conversationFor(run: WfRun) {
   if (run.roomId) return "room:" + run.roomId;
   const bots = await listBots();
   const chief = findAgent(bots, "chief");
