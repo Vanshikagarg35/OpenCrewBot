@@ -509,7 +509,11 @@ export async function recoverRuns() {
   for (const row of r.rows) {
     const id = String(row.id);
     const tasks = await getTasks(id);
-    for (const t of tasks) if (t.status == "running") await updateTask(t.id, { status: "pending" }); // restart it
+    for (const t of tasks) {
+      // running -> restart. waiting_approval also needs pending otherwise nobody waits for the approval after restart (found this bug in testing)
+      // the approval id is kept in task.error so it reuses the same approval
+      if (t.status == "running" || t.status == "waiting_approval") await updateTask(t.id, { status: "pending" });
+    }
     await audit("system", "run_recovered_after_restart", { id });
     console.log("[engine] recovering run", id);
     void executeRun(id);

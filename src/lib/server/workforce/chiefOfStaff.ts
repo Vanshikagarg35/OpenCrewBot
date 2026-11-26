@@ -29,7 +29,7 @@ const CAPS: any = {
   code: ["develop", "code", "engineer", "github"],
   review: ["review", "verif", "qa", "critic"],
   ops: ["ops", "operation", "integration", "email", "slack"],
-  chief: ["chief", "staff", "planning", "lead"],
+  chief: ["chief", "staff"],
 };
 
 export function findAgent(bots: Bot[], cap: string, notId?: string): Bot {
