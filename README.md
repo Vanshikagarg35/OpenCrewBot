@@ -111,5 +111,6 @@ All new code uses only packages that were already in the original project (Next.
 - Cost numbers are estimates
 - No login (same as original - only works on localhost)
 - Didn't deploy, local only
+- `pnpm build` needs internet because the original project loads the Geist font from Google Fonts at build time. `pnpm dev` works offline
 
 More details in [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md), [docs/FEATURE_AUDIT.md](docs/FEATURE_AUDIT.md) and [docs/SUBMISSION.md](docs/SUBMISSION.md).
