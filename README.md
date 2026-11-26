@@ -1,6 +1,6 @@
 # OpenCrewBot - AI Workforce
 
-**Submitted by: Vanshika Garg**
+**Submitted by: Vanshika Garg** ([@Vanshikagarg35](https://github.com/Vanshikagarg35))
 
 This is my fork of [Studio1-OSS/OpenCrewBot](https://github.com/Studio1-OSS/OpenCrewBot) (MIT licence). I extended it from a "team of chat bots" app into a small **AI workforce**: you give one instruction, a Chief of Staff plans it into tasks, agents run them (parallel where possible), external actions wait for approval, and you get one final report.
 
@@ -28,7 +28,7 @@ Seeded: **9 agents** (Scout, Quill, Atlas from original + Chief, Ledger, Pixel, 
 Tested on: Ubuntu, Node 22.23, pnpm 11. (Node >= 22.13 needed by original project)
 
 ```bash
-git clone <this repo>
+git clone https://github.com/Vanshikagarg35/OpenCrewBot.git
 cd OpenCrewBot
 pnpm install
 cp .env.example .env   # all keys optional
