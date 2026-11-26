@@ -12,6 +12,9 @@ import { deleteWorkspace, writeMemory } from "./memory-files";
 import { forgetConversation, resetBot, runTurn, runningBots, stopConversation } from "./runtime";
 import { messagePreview } from "@/lib/shared/preview";
 import { roomConversationId, runRoom } from "./rooms";
+import { seedWorkforce } from "./workforce/seedWorkforce";
+import { recoverRuns, startRun } from "./workforce/taskEngine";
+import { startScheduler } from "./workforce/scheduler";
 
 export { InputError };
 
@@ -23,6 +26,10 @@ export function boot(): Promise<void> {
   g.__opencrewbotBoot ??= (async () => {
     await sweepInterrupted();
     await seed();
+    // workforce stuff
+    await seedWorkforce();
+    await recoverRuns();
+    startScheduler();
   })();
   return g.__opencrewbotBoot;
 }
@@ -244,6 +251,11 @@ export async function sendMessage(conversationId: ConversationId, text: string):
 
   // The reply streams over SSE; the request returns as soon as it's queued.
   if (bot) void runTurn({ bot, conversationId, content }).catch(() => {});
+  // "/plan ..." or "/workforce ..." in a room -> chief of staff takes over
+  if (room && /^\/(plan|workforce)\s+/i.test(content)) {
+    void startRun(content.replace(/^\/(plan|workforce)\s+/i, ""), room.id).catch((e) => console.log("startRun failed", e));
+    return message;
+  }
   if (room) void runRoom(room, message).catch(() => {});
   return message;
 }
