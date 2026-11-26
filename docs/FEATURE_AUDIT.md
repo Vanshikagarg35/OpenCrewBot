@@ -1,5 +1,7 @@
 # Feature audit - original vs mine
 
+By Vanshika Garg
+
 ## What original OpenCrewBot already had
 
 | Feature | State in original |
@@ -23,15 +25,15 @@ Partial / limited in original: no task planning (Mastra task tools were disabled
 |---|---|
 | Chief of Staff planner | New |
 | Execution engine (tasks, deps, parallel, retry, timeout, cancel, recovery, history) | New |
-| Delegation via DELEGATE lines + limits | New (on top of original handoff idea) |
+| Collaboration: DELEGATE / ASK / VERIFY / CHALLENGE become tracked tasks, 4 loop guards | New (on top of original @mention handoff idea) |
 | Agent factory from natural language | New |
 | Shared memory (user/project/decisions/history/room) + provenance | Extended original markdown memory |
 | `why` field in memory_add, `team_memory_add` tool | Extended |
-| Skills system (9 md skills) | New |
+| Skills system (9 md skills) + Skills & Tools manager | New |
 | Controlled Access level + tool level permissions | Extended (`setForTool`) |
 | Approval centre (task + chat approvals in one place), audit log | New |
 | GitHub, Slack, Gmail(mock), CSV integrations | New (MCP/Composio kept from original) |
-| Scheduler | New |
+| Scheduler + failure reporting | New |
 | OpenAI + Ollama providers, fallback model, routing, cost per task | Extended runtime |
 | Mock mode task outputs | Extended mock model |
 | Workforce dashboard (8 tabs) | New page, linked from original sidebar |

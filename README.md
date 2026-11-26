@@ -1,4 +1,6 @@
-# OpenCrewBot - AI Workforce (assignment submission)
+# OpenCrewBot - AI Workforce
+
+**Submitted by: Vanshika Garg**
 
 This is my fork of [Studio1-OSS/OpenCrewBot](https://github.com/Studio1-OSS/OpenCrewBot) (MIT licence). I extended it from a "team of chat bots" app into a small **AI workforce**: you give one instruction, a Chief of Staff plans it into tasks, agents run them (parallel where possible), external actions wait for approval, and you get one final report.
 
@@ -10,13 +12,13 @@ Original README is kept at [docs/ORIGINAL_README.md](docs/ORIGINAL_README.md). O
 |---|---|---|
 | A - Chief of Staff | Breaks instruction into tasks, picks agents by role, sets dependencies, consolidates result. LLM planner + rule based fallback for mock mode | `src/lib/server/workforce/chiefOfStaff.ts` |
 | B - Agent factory | Describe an agent in plain english -> config (name, role, instructions, model, skills, permissions, output format) -> review JSON -> create. Available instantly, no code change | `agentFactory.ts`, Workforce → Agents |
-| C - Collaboration | Rooms (from original) + task outputs passed to dependent agents, `DELEGATE @handle:` creates follow up task, reviewer agent challenges results. Max delegation depth 2 and max 20 tasks per run so no infinite loop | `taskEngine.ts` |
+| C - Collaboration | Rooms (from original) + task outputs passed to dependent agents. Agents can write `DELEGATE @handle:`, `ASK @handle:`, `VERIFY @handle:` or `CHALLENGE:` and each one becomes a tracked task. Challenges go to a reviewer agent. Visible in the room chat. 4 loop guards: depth 2, 20 tasks per run, 2 requests per output, same pair only once | `taskEngine.ts` |
 | D - Execution engine | Task plan with id, agent, deps, status, start/end time, output, error, approval flag. Retry (3 tries with backoff + fallback model), timeout, cancel run/task, retry task, recovery after restart, history | `taskEngine.ts`, Workforce → Runs |
 | E - Memory | Original per-agent MEMORY.md + new USER.md, PROJECT.md, DECISIONS.md, HISTORY.md and room memory. All markdown, editable in UI or any editor. Every line has provenance (when, who, why) | `sharedMemory.ts`, Workforce → Memory |
-| F - Skills | 9 skills as markdown files in `/skills`. Picked automatically by keyword match with the task. Add a new .md file = new skill | `skills.ts` |
+| F - Skills | 9 skills as markdown files in `/skills`. Picked automatically by keyword match with the task. Add a new .md file = new skill. Skills & Tools manager page shows skills, agent tools and engine actions with their live/mock status | `skills.ts` |
 | G - Approvals | 3 levels: Ask First, Controlled (pre-approved actions + limit per run), Full. Approval centre with preview + approve/reject, audit log. Rejected = never executed | `approvals.ts`, Workforce → Approvals |
 | H - Integrations | GitHub REST (live), Slack webhook (live if webhook set), MCP/Composio (from original), CSV analysis (live). Gmail is MOCK and labelled | `integrations.ts` |
-| I - Scheduled workflows | Interval scheduler, run now, pause/resume, history, failure shown in history | `scheduler.ts`, Workforce → Workflows |
+| I - Scheduled workflows | Interval scheduler, run now, pause/resume, history, failure reporting (message in the room + audit entry, not just the table) | `scheduler.ts`, Workforce → Workflows |
 | J - Multi model | Nebius (original), OpenAI, Ollama (local). Per agent model, fallback model, task based routing (optional), token + cost tracking per task/run | `llm.ts`, `runtime.ts` |
 
 Seeded: **9 agents** (Scout, Quill, Atlas from original + Chief, Ledger, Pixel, Byte, Verity, Relay), **5 rooms** (Studio + Market Intel, Growth Lab, Biz Analysis, Dev Team), **9 skills**, 1 weekly workflow.
@@ -94,18 +96,20 @@ All new code uses only packages that were already in the original project (Next.
 
 ## Tests
 
-`node scripts/smoke-test.mjs` (app must be running). Result in [docs/TEST_RESULTS.md](docs/TEST_RESULTS.md) - 19/19 passed in mock mode.
+`node scripts/smoke-test.mjs` (app must be running). Result in [docs/TEST_RESULTS.md](docs/TEST_RESULTS.md) - 25/25 passed in mock mode.
 
 ## Known limitations
 
 - Parallel tasks run in batches of 3. If one task in batch waits for approval the other ready tasks wait for that batch to finish
+- Scheduler uses an interval (every N minutes), not real cron, so you cant say "every Monday 9am" exactly
 - Task timeout marks the task failed but does not abort the model call (aborting would stop the whole room conversation)
 - Skill picking is keyword based, not semantic
 - Rule based planner (mock mode) only knows the demo type of requests, for other things it makes a generic research + write plan
+- Collaboration limits are fixed numbers in code, not configurable from the UI
 - Dashboard uses polling every 2 sec, not SSE
 - Gmail is mock, I didn't get time to do OAuth
 - Cost numbers are estimates
 - No login (same as original - only works on localhost)
 - Didn't deploy, local only
 
-More details in [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) and [docs/FEATURE_AUDIT.md](docs/FEATURE_AUDIT.md).
+More details in [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md), [docs/FEATURE_AUDIT.md](docs/FEATURE_AUDIT.md) and [docs/SUBMISSION.md](docs/SUBMISSION.md).

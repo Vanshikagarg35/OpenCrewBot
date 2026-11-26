@@ -1,5 +1,7 @@
 # Architecture
 
+By Vanshika Garg
+
 ## Overview
 
 ```
@@ -23,7 +25,7 @@
          external action? -> permission check -> approval centre -> execute or NOT
          else -> runTurn() of original runtime (Mastra agent with tools + memory)
          retry x3 with fallback model, timeout
-         parse "DELEGATE @x:" -> new task (depth <= 2)
+         parse DELEGATE/ASK/VERIFY @x and CHALLENGE -> new task (depth <= 2)
      - consolidation task by Chief
    -> final report (db + data/reports/*.md) + HISTORY.md + room memory
         |
@@ -66,6 +68,19 @@ Rejected / not approved in 30 min = task status `rejected`, `executeExternal()` 
 
 Secrets: only from `.env`, never saved in db, not returned by api (models endpoint only returns provider names). Memory writes go through the original `redactSecrets()`.
 
+## Loop prevention
+
+The assignment says uncontrolled agent conversations must be prevented. Four guards:
+
+1. `MAX_DELEGATION_DEPTH = 2` - a delegated task can delegate once more, then stop
+2. `MAX_TASKS_PER_RUN = 20`
+3. max 2 collaboration requests from one task output
+4. the same (from agent -> to agent -> kind) pair is allowed only once per run, so A→B→A→B ping pong stops
+
+Blocked attempts are written to the audit log as `collaboration_blocked` with the reason.
+
+The consolidation task is not allowed to ask anyone, otherwise it would wait for a task that waits for it (I hit this deadlock in testing).
+
 ## Recovery
 
 On server start (`boot()` in service.ts) `recoverRuns()` finds runs with status running, puts running / waiting_approval tasks back to pending and starts the loop again. Approval id is stored on the task so the same approval is reused.
@@ -76,3 +91,4 @@ On server start (`boot()` in service.ts) `recoverRuns()` finds runs with status 
 - **One API route** with `what` / `action` param. Simpler for me than 15 route files.
 - **Polling** in dashboard instead of SSE, the original SSE bus has fixed event types and polling was faster to build.
 - **Rule based planner** so the whole flow works in mock mode without any key (needed for the assignment mock mode requirement).
+- **Collaboration as tasks, not chat messages.** When an agent asks another agent something I create a real task instead of just a chat line, so it shows in the plan, has a status, and can be retried. This is also what makes the loop guards possible.
