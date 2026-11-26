@@ -1,0 +1,241 @@
+lead_id,date,product_line,segment,channel,city,stage,counsellor,deal_value_inr
+L0001,2026-07-03,Aspirations,Class 12,Google Ads,Mumbai,contacted,Priya,0
+L0002,2026-07-14,Study Abroad,UK,Website,Hyderabad,contacted,Neha,0
+L0003,2026-07-27,Study Abroad,USA,Instagram,Mumbai,counselling_done,Arjun,0
+L0004,2026-07-08,Study Abroad,UK,Website,Delhi,counselling_done,,0
+L0005,2026-07-19,Study Abroad,Australia,Referral,Jaipur,counselling_done,,0
+L0006,2026-08-12,Study Abroad,Australia,Instagram,Mumbai,counselling_done,,0
+L0007,2026-08-16,Study Abroad,Canada,Website,Hyderabad,lead,Priya,0
+L0008,2026-09-10,School Partnerships,ICSE,Website,Pune,lost,Arjun,0
+L0009,2026-10-11,Study Abroad,USA,Instagram,Chandigarh,counselling_done,Priya,0
+L0010,2026-08-25,Study Abroad,Canada,Instagram,Lucknow,counselling_done,Arjun,0
+L0011,2026-07-25,School Partnerships,ICSE,School Event,Lucknow,lead,Priya,0
+L0012,2026-10-03,Aspirations,Class 12,Website,Mumbai,contacted,Priya,0
+L0013,2026-07-24,School Partnerships,ICSE,WhatsApp,Jaipur,counselling_done,,0
+L0014,2026-09-01,School Partnerships,ICSE,Referral,Chandigarh,application_started,Priya,0
+L0015,2026-07-07,Study Abroad,Australia,Website,Jaipur,lead,Arjun,0
+L0016,2026-10-03,Study Abroad,USA,School Event,Bangalore,contacted,Vikram,0
+L0017,2026-08-27,School Partnerships,CBSE,Website,Hyderabad,contacted,,0
+L0018,2026-09-22,Aspirations,Class 11,WhatsApp,Hyderabad,contacted,Arjun,0
+L0019,2026-08-22,Study Abroad,Australia,Instagram,Pune,lead,Neha,0
+L0020,2026-09-01,School Partnerships,ICSE,Website,Bangalore,lead,Vikram,0
+L0021,2026-08-23,Aspirations,Class 12,Website,Delhi,counselling_done,Vikram,0
+L0022,2026-07-16,School Partnerships,CBSE,School Event,Hyderabad,contacted,Neha,0
+L0023,2026-10-06,Study Abroad,USA,Instagram,Mumbai,lost,Priya,0
+L0024,2026-08-18,Study Abroad,UK,Instagram,Mumbai,lead,Priya,0
+L0025,2026-10-05,Study Abroad,UK,Instagram,Jaipur,lost,Priya,0
+L0026,2026-10-15,Aspirations,Class 12,School Event,Chandigarh,lead,Vikram,0
+L0027,2026-09-24,Aspirations,Class 11,Instagram,Jaipur,lead,Vikram,0
+L0028,2026-09-05,Study Abroad,Australia,Website,Delhi,lead,,0
+L0029,2026-09-17,Aspirations,Class 11,WhatsApp,Lucknow,lost,Arjun,0
+L0030,2026-09-21,Aspirations,Class 12,Google Ads,Pune,contacted,,0
+L0031,2026-10-12,Study Abroad,USA,Google Ads,Delhi,converted,Neha,60000
+L0032,2026-09-15,Aspirations,Class 11,School Event,Lucknow,lead,Priya,0
+L0033,2026-10-07,Study Abroad,Canada,Google Ads,Lucknow,lead,Arjun,0
+L0034,2026-07-16,School Partnerships,ICSE,Website,Lucknow,lost,Neha,0
+L0035,2026-10-26,Study Abroad,Canada,School Event,Lucknow,converted,Neha,60000
+L0036,2026-07-24,School Partnerships,CBSE,School Event,Bangalore,contacted,Arjun,0
+L0037,2026-10-26,Study Abroad,Australia,Instagram,Bangalore,lead,,0
+L0038,2026-08-18,School Partnerships,ICSE,WhatsApp,Bangalore,lost,Neha,0
+L0039,2026-08-14,Study Abroad,UK,WhatsApp,Pune,application_started,Arjun,0
+L0040,2026-08-25,Study Abroad,UK,Referral,Lucknow,contacted,Priya,0
+L0041,2026-09-15,School Partnerships,CBSE,Google Ads,Hyderabad,lead,,0
+L0042,2026-07-28,Study Abroad,Australia,Website,Chandigarh,lead,Arjun,0
+L0043,2026-10-20,Study Abroad,UK,Google Ads,Mumbai,lead,,0
+L0044,2026-10-26,Study Abroad,UK,Referral,Mumbai,application_started,,0
+L0045,2026-07-25,Study Abroad,UK,Google Ads,Mumbai,contacted,,0
+L0046,2026-07-15,School Partnerships,ICSE,Website,Lucknow,lead,,0
+L0047,2026-10-17,Study Abroad,USA,WhatsApp,Pune,contacted,,0
+L0048,2026-08-27,Aspirations,Class 11,Website,Chandigarh,lost,Arjun,0
+L0049,2026-09-03,School Partnerships,CBSE,Instagram,Pune,contacted,Vikram,0
+L0050,2026-07-25,Study Abroad,Canada,Google Ads,Bangalore,application_started,Priya,0
+L0051,2026-08-24,Study Abroad,Australia,Referral,Mumbai,lost,Vikram,0
+L0052,2026-08-06,School Partnerships,ICSE,Google Ads,Hyderabad,lost,,0
+L0053,2026-09-11,School Partnerships,CBSE,Referral,Mumbai,contacted,Priya,0
+L0054,2026-10-23,Study Abroad,UK,Referral,Delhi,counselling_done,Vikram,0
+L0055,2026-07-04,Aspirations,Class 12,Website,Pune,counselling_done,Neha,0
+L0056,2026-08-09,Study Abroad,Canada,Referral,Bangalore,contacted,Vikram,0
+L0057,2026-10-23,Aspirations,Class 11,School Event,Lucknow,lead,Neha,0
+L0058,2026-09-01,Aspirations,Class 11,Instagram,Mumbai,converted,Priya,4999
+L0059,2026-10-01,Study Abroad,Canada,Website,Lucknow,converted,,45000
+L0060,2026-07-17,School Partnerships,CBSE,Referral,Pune,counselling_done,Neha,0
+L0061,2026-08-10,Study Abroad,Australia,Referral,Jaipur,lead,,0
+L0062,2026-08-09,Study Abroad,USA,Referral,Lucknow,counselling_done,Neha,0
+L0063,2026-08-17,Aspirations,Class 11,Instagram,Chandigarh,lead,Arjun,0
+L0064,2026-10-22,School Partnerships,ICSE,Instagram,Chandigarh,counselling_done,,0
+L0065,2026-08-08,School Partnerships,CBSE,Website,Lucknow,contacted,Arjun,0
+L0066,2026-07-27,Study Abroad,Australia,School Event,Bangalore,lost,Neha,0
+L0067,2026-07-03,Study Abroad,Canada,WhatsApp,Hyderabad,converted,,75000
+L0068,2026-09-02,Aspirations,Class 11,Website,Chandigarh,lead,Arjun,0
+L0069,2026-09-12,Study Abroad,Australia,Referral,Lucknow,counselling_done,,0
+L0070,2026-09-07,Aspirations,Class 12,Google Ads,Lucknow,lead,Arjun,0
+L0071,2026-10-09,Study Abroad,UK,Referral,Pune,contacted,Arjun,0
+L0072,2026-07-05,Study Abroad,UK,Instagram,Hyderabad,contacted,,0
+L0073,2026-09-21,Study Abroad,UK,School Event,Pune,lead,Neha,0
+L0074,2026-10-25,Study Abroad,Australia,WhatsApp,Lucknow,lost,Vikram,0
+L0075,2026-08-02,Study Abroad,Australia,Referral,Hyderabad,application_started,,0
+L0076,2026-08-03,Study Abroad,Australia,Website,Delhi,converted,Neha,45000
+L0077,2026-07-13,Study Abroad,Australia,WhatsApp,Chandigarh,contacted,,0
+L0078,2026-08-16,Study Abroad,UK,WhatsApp,Jaipur,lead,Neha,0
+L0079,2026-07-22,School Partnerships,ICSE,Instagram,Mumbai,application_started,Vikram,0
+L0080,2026-08-24,Aspirations,Class 11,Instagram,Chandigarh,converted,Vikram,7999
+L0081,2026-09-25,School Partnerships,CBSE,Instagram,Delhi,contacted,,0
+L0082,2026-09-09,Study Abroad,USA,Instagram,Jaipur,counselling_done,,0
+L0083,2026-10-09,Study Abroad,Australia,Instagram,Mumbai,counselling_done,Arjun,0
+L0084,2026-09-15,School Partnerships,ICSE,Referral,Chandigarh,application_started,Vikram,0
+L0085,2026-07-16,Study Abroad,Canada,Website,Delhi,contacted,Priya,0
+L0086,2026-08-07,School Partnerships,ICSE,Instagram,Mumbai,converted,,250000
+L0087,2026-09-04,Study Abroad,Canada,Google Ads,Lucknow,converted,Arjun,75000
+L0088,2026-08-01,School Partnerships,ICSE,School Event,Chandigarh,contacted,Vikram,0
+L0089,2026-10-12,School Partnerships,CBSE,Referral,Hyderabad,application_started,Priya,0
+L0090,2026-09-27,Study Abroad,Canada,Referral,Hyderabad,lead,Neha,0
+L0091,2026-09-09,Study Abroad,USA,WhatsApp,Lucknow,lead,Neha,0
+L0092,2026-07-12,School Partnerships,CBSE,School Event,Hyderabad,lost,Priya,0
+L0093,2026-09-21,Study Abroad,UK,Referral,Bangalore,lead,Arjun,0
+L0094,2026-08-25,Aspirations,Class 11,School Event,Lucknow,contacted,Vikram,0
+L0095,2026-08-24,Study Abroad,UK,WhatsApp,Mumbai,counselling_done,Neha,0
+L0096,2026-08-21,School Partnerships,CBSE,School Event,Jaipur,counselling_done,Vikram,0
+L0097,2026-10-14,Study Abroad,UK,Website,Lucknow,lead,Priya,0
+L0098,2026-09-13,Aspirations,Class 11,Referral,Pune,application_started,Priya,0
+L0099,2026-07-06,School Partnerships,ICSE,Website,Bangalore,counselling_done,Neha,0
+L0100,2026-10-18,Study Abroad,USA,Website,Pune,lost,Vikram,0
+L0101,2026-08-08,Aspirations,Class 12,School Event,Mumbai,contacted,Arjun,0
+L0102,2026-08-12,Aspirations,Class 12,Website,Jaipur,lead,,0
+L0103,2026-08-13,Study Abroad,USA,Instagram,Jaipur,converted,Priya,90000
+L0104,2026-09-05,Study Abroad,UK,School Event,Pune,contacted,Neha,0
+L0105,2026-10-14,Aspirations,Class 11,Google Ads,Jaipur,contacted,Neha,0
+L0106,2026-10-19,Study Abroad,Australia,Instagram,Chandigarh,counselling_done,Neha,0
+L0107,2026-10-15,Study Abroad,Canada,School Event,Pune,lost,Neha,0
+L0108,2026-07-27,Study Abroad,USA,Google Ads,Chandigarh,lead,Neha,0
+L0109,2026-09-05,Study Abroad,UK,Instagram,Jaipur,converted,,60000
+L0110,2026-08-13,School Partnerships,CBSE,WhatsApp,Jaipur,converted,Arjun,250000
+L0111,2026-10-09,Study Abroad,UK,Instagram,Lucknow,counselling_done,Arjun,0
+L0112,2026-08-01,School Partnerships,ICSE,Website,Hyderabad,contacted,Priya,0
+L0113,2026-10-03,Study Abroad,UK,Instagram,Jaipur,contacted,Arjun,0
+L0114,2026-07-23,School Partnerships,CBSE,Referral,Lucknow,contacted,Vikram,0
+L0115,2026-07-26,Aspirations,Class 12,WhatsApp,Jaipur,contacted,,0
+L0116,2026-08-10,Study Abroad,Canada,Google Ads,Pune,counselling_done,Arjun,0
+L0117,2026-09-04,School Partnerships,ICSE,Google Ads,Chandigarh,contacted,,0
+L0118,2026-07-20,Study Abroad,Australia,Google Ads,Bangalore,counselling_done,Vikram,0
+L0119,2026-08-14,Study Abroad,UK,Google Ads,Delhi,lead,Neha,0
+L0120,2026-09-24,Study Abroad,Australia,School Event,Mumbai,counselling_done,Neha,0
+L0121,2026-10-02,Study Abroad,Australia,Referral,Jaipur,contacted,Vikram,0
+L0122,2026-07-01,Aspirations,Class 12,Referral,Mumbai,contacted,Priya,0
+L0123,2026-07-18,Study Abroad,Canada,Referral,Pune,counselling_done,Vikram,0
+L0124,2026-10-07,Aspirations,Class 12,Referral,Lucknow,converted,,2999
+L0125,2026-10-01,School Partnerships,ICSE,Google Ads,Hyderabad,contacted,Arjun,0
+L0126,2026-10-03,School Partnerships,CBSE,Instagram,Delhi,contacted,Priya,0
+L0127,2026-09-12,Study Abroad,USA,WhatsApp,Jaipur,lead,Priya,0
+L0128,2026-07-24,Study Abroad,UK,Referral,Mumbai,converted,Neha,75000
+L0129,2026-10-25,Study Abroad,USA,Instagram,Hyderabad,counselling_done,Priya,0
+L0130,2026-10-06,School Partnerships,CBSE,School Event,Delhi,lead,Priya,0
+L0131,2026-09-15,Study Abroad,Australia,Website,Lucknow,contacted,,0
+L0132,2026-08-08,Study Abroad,Canada,Website,Hyderabad,contacted,Neha,0
+L0133,2026-09-06,Study Abroad,UK,School Event,Hyderabad,counselling_done,Neha,0
+L0134,2026-08-04,Study Abroad,Canada,Referral,Hyderabad,application_started,Vikram,0
+L0135,2026-10-15,School Partnerships,ICSE,Google Ads,Pune,contacted,,0
+L0136,2026-09-12,Study Abroad,Canada,Referral,Jaipur,contacted,Priya,0
+L0137,2026-08-08,Study Abroad,USA,School Event,Bangalore,contacted,Priya,0
+L0138,2026-09-08,Study Abroad,USA,Referral,Pune,lead,Neha,0
+L0139,2026-10-27,School Partnerships,ICSE,Instagram,Pune,lead,Vikram,0
+L0140,2026-08-04,Aspirations,Class 12,Instagram,Delhi,lost,Arjun,0
+L0141,2026-08-15,Study Abroad,USA,Instagram,Jaipur,contacted,Neha,0
+L0142,2026-09-07,Study Abroad,Canada,WhatsApp,Delhi,counselling_done,Priya,0
+L0143,2026-09-02,Aspirations,Class 12,Google Ads,Pune,lead,Neha,0
+L0144,2026-08-20,Aspirations,Class 12,School Event,Jaipur,counselling_done,Neha,0
+L0145,2026-07-26,Study Abroad,USA,Instagram,Hyderabad,converted,,90000
+L0146,2026-08-13,Study Abroad,Australia,WhatsApp,Jaipur,counselling_done,Vikram,0
+L0147,2026-07-10,Aspirations,Class 11,WhatsApp,Lucknow,contacted,Vikram,0
+L0148,2026-10-24,School Partnerships,CBSE,Instagram,Hyderabad,converted,Arjun,150000
+L0149,2026-10-04,Study Abroad,UK,School Event,Mumbai,lost,Vikram,0
+L0150,2026-08-21,Aspirations,Class 12,School Event,Hyderabad,converted,Neha,2999
+L0151,2026-08-12,Aspirations,Class 12,WhatsApp,Jaipur,contacted,Arjun,0
+L0152,2026-10-25,Study Abroad,Australia,Instagram,Pune,lead,Priya,0
+L0153,2026-10-11,Study Abroad,Australia,Instagram,Delhi,lost,,0
+L0154,2026-08-21,School Partnerships,CBSE,Instagram,Pune,lost,,0
+L0155,2026-08-02,School Partnerships,CBSE,Website,Hyderabad,converted,,400000
+L0156,2026-08-08,Study Abroad,Australia,School Event,Pune,contacted,Neha,0
+L0157,2026-10-18,Study Abroad,UK,WhatsApp,Jaipur,converted,Vikram,45000
+L0158,2026-10-22,Aspirations,Class 11,Website,Lucknow,lead,Vikram,0
+L0159,2026-10-15,School Partnerships,ICSE,Google Ads,Pune,lead,Vikram,0
+L0160,2026-08-12,School Partnerships,ICSE,Google Ads,Hyderabad,converted,Priya,150000
+L0161,2026-07-02,Study Abroad,Canada,School Event,Bangalore,counselling_done,Neha,0
+L0162,2026-07-25,Aspirations,Class 12,WhatsApp,Hyderabad,contacted,Arjun,0
+L0163,2026-07-07,Study Abroad,UK,Instagram,Bangalore,lost,Vikram,0
+L0164,2026-08-03,Aspirations,Class 11,Google Ads,Lucknow,counselling_done,,0
+L0165,2026-09-27,Aspirations,Class 11,Google Ads,Chandigarh,contacted,Arjun,0
+L0166,2026-10-07,Aspirations,Class 11,Website,Jaipur,lost,,0
+L0167,2026-08-06,Study Abroad,USA,Referral,Hyderabad,contacted,Arjun,0
+L0168,2026-10-06,Aspirations,Class 11,WhatsApp,Jaipur,contacted,Neha,0
+L0169,2026-07-09,Study Abroad,UK,WhatsApp,Hyderabad,converted,Priya,90000
+L0170,2026-08-12,Aspirations,Class 11,School Event,Lucknow,lost,Neha,0
+L0171,2026-07-10,School Partnerships,ICSE,Google Ads,Jaipur,lead,Priya,0
+L0172,2026-07-08,Aspirations,Class 12,WhatsApp,Bangalore,lead,Priya,0
+L0173,2026-07-05,School Partnerships,CBSE,School Event,Chandigarh,counselling_done,Arjun,0
+L0174,2026-09-10,Study Abroad,UK,Instagram,Mumbai,lead,,0
+L0175,2026-09-19,Aspirations,Class 12,Website,Bangalore,lead,Arjun,0
+L0176,2026-08-23,Aspirations,Class 12,Website,Bangalore,converted,Vikram,2999
+L0177,2026-09-13,Study Abroad,Canada,Instagram,Jaipur,application_started,Neha,0
+L0178,2026-10-20,Study Abroad,UK,WhatsApp,Chandigarh,converted,Arjun,75000
+L0179,2026-07-13,Study Abroad,Australia,Instagram,Bangalore,lead,Arjun,0
+L0180,2026-07-01,Study Abroad,Australia,Instagram,Pune,lost,Arjun,0
+L0181,2026-10-27,School Partnerships,CBSE,Google Ads,Bangalore,counselling_done,,0
+L0182,2026-07-24,Aspirations,Class 11,Instagram,Chandigarh,contacted,,0
+L0183,2026-10-06,Study Abroad,UK,School Event,Pune,converted,Neha,90000
+L0184,2026-07-11,Aspirations,Class 11,Google Ads,Jaipur,counselling_done,Neha,0
+L0185,2026-10-22,Aspirations,Class 11,WhatsApp,Jaipur,counselling_done,Priya,0
+L0186,2026-07-06,Study Abroad,USA,Instagram,Jaipur,lost,Arjun,0
+L0187,2026-09-20,Study Abroad,USA,Google Ads,Pune,converted,Vikram,75000
+L0188,2026-08-19,School Partnerships,ICSE,School Event,Jaipur,converted,Arjun,250000
+L0189,2026-08-05,School Partnerships,CBSE,Website,Delhi,counselling_done,Neha,0
+L0190,2026-08-12,Study Abroad,Canada,Instagram,Bangalore,application_started,Neha,0
+L0191,2026-07-23,Study Abroad,UK,Instagram,Mumbai,lead,Neha,0
+L0192,2026-07-28,Study Abroad,Canada,Website,Hyderabad,converted,Neha,60000
+L0193,2026-07-02,Study Abroad,USA,Google Ads,Mumbai,contacted,Priya,0
+L0194,2026-08-10,School Partnerships,ICSE,Instagram,Lucknow,lead,Priya,0
+L0195,2026-09-10,School Partnerships,CBSE,Referral,Delhi,lead,Priya,0
+L0196,2026-09-20,Aspirations,Class 12,Website,Delhi,contacted,Vikram,0
+L0197,2026-07-12,Study Abroad,UK,School Event,Chandigarh,counselling_done,Neha,0
+L0198,2026-07-19,Study Abroad,USA,WhatsApp,Jaipur,lost,Arjun,0
+L0199,2026-09-25,School Partnerships,CBSE,Instagram,Delhi,counselling_done,Neha,0
+L0200,2026-08-16,Aspirations,Class 12,School Event,Lucknow,lead,,0
+L0201,2026-09-27,Aspirations,Class 11,Website,Pune,lost,Arjun,0
+L0202,2026-07-16,School Partnerships,ICSE,Google Ads,Mumbai,lead,Priya,0
+L0203,2026-10-24,Aspirations,Class 12,Instagram,Mumbai,contacted,Vikram,0
+L0204,2026-09-14,Study Abroad,UK,Referral,Bangalore,contacted,Vikram,0
+L0205,2026-07-12,Study Abroad,USA,School Event,Lucknow,lead,,0
+L0206,2026-09-06,Study Abroad,Australia,School Event,Chandigarh,application_started,Vikram,0
+L0207,2026-09-15,Aspirations,Class 11,Website,Pune,lead,,0
+L0208,2026-08-24,Study Abroad,USA,Referral,Bangalore,contacted,Arjun,0
+L0209,2026-08-08,Aspirations,Class 12,Website,Lucknow,contacted,Arjun,0
+L0210,2026-08-22,Aspirations,Class 11,WhatsApp,Mumbai,lost,Arjun,0
+L0211,2026-09-24,School Partnerships,CBSE,Google Ads,Jaipur,lost,Vikram,0
+L0212,2026-07-09,Aspirations,Class 11,Google Ads,Pune,lead,Vikram,0
+L0213,2026-10-23,School Partnerships,ICSE,Instagram,Pune,lead,,0
+L0214,2026-09-20,Aspirations,Class 11,School Event,Hyderabad,lead,Neha,0
+L0215,2026-10-28,Study Abroad,USA,School Event,Pune,application_started,,0
+L0216,2026-07-15,Study Abroad,USA,WhatsApp,Hyderabad,contacted,Priya,0
+L0217,2026-10-08,Aspirations,Class 11,WhatsApp,Hyderabad,application_started,Arjun,0
+L0218,2026-07-20,Aspirations,Class 11,School Event,Hyderabad,contacted,,0
+L0219,2026-07-13,Study Abroad,Australia,WhatsApp,Chandigarh,contacted,Neha,0
+L0220,2026-08-23,Study Abroad,UK,Referral,Pune,counselling_done,,0
+L0221,2026-10-17,Aspirations,Class 12,Instagram,Delhi,converted,Priya,7999
+L0222,2026-10-07,Aspirations,Class 12,School Event,Bangalore,application_started,Vikram,0
+L0223,2026-09-21,Study Abroad,Canada,WhatsApp,Delhi,lost,Priya,0
+L0224,2026-07-03,Aspirations,Class 11,School Event,Hyderabad,contacted,Vikram,0
+L0225,2026-08-10,Aspirations,Class 12,Website,Hyderabad,lead,,0
+L0226,2026-08-05,Study Abroad,USA,School Event,Mumbai,counselling_done,Arjun,0
+L0227,2026-08-27,School Partnerships,ICSE,WhatsApp,Bangalore,counselling_done,Priya,0
+L0228,2026-08-25,School Partnerships,CBSE,School Event,Chandigarh,lost,Priya,0
+L0229,2026-09-14,Study Abroad,USA,Referral,Bangalore,application_started,Vikram,0
+L0230,2026-09-11,Study Abroad,UK,WhatsApp,Chandigarh,converted,Vikram,75000
+L0231,2026-09-05,School Partnerships,CBSE,Website,Jaipur,counselling_done,Vikram,0
+L0232,2026-09-21,Study Abroad,UK,Instagram,Delhi,converted,Neha,75000
+L0233,2026-09-20,Study Abroad,USA,Instagram,Mumbai,application_started,,0
+L0234,2026-10-12,Study Abroad,Australia,Google Ads,Bangalore,contacted,Arjun,0
+L0235,2026-07-22,School Partnerships,CBSE,Website,Jaipur,lead,Arjun,0
+L0236,2026-07-24,School Partnerships,ICSE,WhatsApp,Chandigarh,contacted,Neha,0
+L0237,2026-08-16,Study Abroad,Canada,Referral,Chandigarh,counselling_done,,0
+L0238,2026-08-23,Study Abroad,UK,School Event,Chandigarh,counselling_done,Arjun,0
+L0239,2026-07-06,School Partnerships,ICSE,Google Ads,Lucknow,counselling_done,Vikram,0
+L0240,2026-10-12,School Partnerships,ICSE,WhatsApp,Hyderabad,contacted,Vikram,0
